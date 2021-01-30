@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="network_error">Произошла ошибка при загрузке данных. Проверьте подключение к сети</string>
+    <string name="btn_reload">повторить</string>
+</resources>
