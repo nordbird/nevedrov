@@ -41,7 +41,7 @@
     </LinearLayout>
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_gif"
+        android:id="@+id/cv_card"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="8dp"
@@ -56,28 +56,29 @@
             android:layout_height="match_parent">
 
             <ProgressBar
-                android:id="@+id/pb_gif_loading"
+                android:id="@+id/pb_card_loading"
                 android:layout_width="72dp"
                 android:layout_height="72dp"
                 android:layout_centerInParent="true"
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/iv_gif"
+                android:id="@+id/iv_card_gif"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
             <TextView
-                android:id="@+id/tv_title"
+                android:id="@+id/tv_card_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/gif_title_gradient"
                 android:gravity="center"
-                android:textSize="20sp"
+                android:minHeight="48dp"
+                android:padding="4dp"
+                android:text="Когда нет времени сделать все правильно"
                 android:textColor="@color/white"
-                android:text="Когда нет времени сделать все правильно" />
+                android:textSize="20sp" />
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
@@ -90,7 +91,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_gif">
+        app:layout_constraintTop_toBottomOf="@+id/cv_card">
 
         <ImageButton
             android:id="@+id/ib_prev"
