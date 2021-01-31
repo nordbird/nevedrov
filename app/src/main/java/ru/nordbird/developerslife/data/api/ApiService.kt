@@ -7,6 +7,9 @@ import ru.nordbird.developerslife.data.model.CardList
 
 interface ApiService {
 
-    @GET("latest/{page}?json=true")
-    suspend fun getLatestCard(@Path("page") page: Int): Response<CardList>
+    @GET("{category}/{page}?json=true")
+    suspend fun getCards(
+        @Path("category") category: String,
+        @Path("page") page: Int
+    ): Response<CardList>
 }

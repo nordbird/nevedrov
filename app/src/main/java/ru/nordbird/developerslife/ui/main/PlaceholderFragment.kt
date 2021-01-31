@@ -27,9 +27,15 @@ class PlaceholderFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        pageViewModel = ViewModelProvider(this).get(PageViewModel::class.java).apply {
-            setIndex(arguments?.getInt(ARG_SECTION_NUMBER) ?: 0)
+
+        val pageType = when (arguments?.getInt(ARG_SECTION_NUMBER) ?: 0) {
+            0 -> PageType.LATEST
+            1 -> PageType.TOP
+            2 -> PageType.HOT
+            else -> PageType.LATEST
         }
+        pageViewModel =
+            ViewModelProvider(this, PageViewModelFactory(pageType)).get(PageViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -38,11 +44,11 @@ class PlaceholderFragment : Fragment() {
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
 
-        pageViewModel.getCurrent().observe(this, {
+        pageViewModel.getCard().observe(this, {
             updateUI(it)
         })
 
-        pageViewModel.getCurrentIndex().observe(this, {
+        pageViewModel.getCardIndex().observe(this, {
             updatePrevButton(it > 0)
         })
 
@@ -53,6 +59,7 @@ class PlaceholderFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         binding.ibNext.setOnClickListener { pageViewModel.nextCard() }
         binding.ibPrev.setOnClickListener { pageViewModel.prevCard() }
+        binding.btnReloadCard.setOnClickListener { pageViewModel.reloadCard() }
     }
 
     override fun onDestroyView() {
@@ -130,10 +137,4 @@ class PlaceholderFragment : Fragment() {
             }
         }
     }
-}
-
-enum class FragmentType {
-    LATEST,
-    HOT,
-    TOP
 }

@@ -32,6 +32,7 @@
             android:text="@string/network_error" />
 
         <Button
+            android:id="@+id/btn_reload_card"
             style="@style/Theme.DevelopersLife.ButtonReload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

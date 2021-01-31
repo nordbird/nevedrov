@@ -10,33 +10,50 @@ import ru.nordbird.developerslife.utils.Resource
 object CardRepository {
     private val cardApi = ApiServiceImpl.getApi()
 
-    private val latestItems = mutableLiveData(Resource.success(emptyList<Card>()))
-    private var page = 0
+    private val cardsItems = mutableMapOf(
+        CardCategory.LATEST to mutableLiveData(Resource.success(emptyList<Card>())),
+        CardCategory.HOT to mutableLiveData(Resource.success(emptyList<Card>())),
+        CardCategory.TOP to mutableLiveData(Resource.success(emptyList<Card>()))
+    )
+    private var page = mutableMapOf(
+        CardCategory.LATEST to mutableLiveData(0),
+        CardCategory.HOT to mutableLiveData(0),
+        CardCategory.TOP to mutableLiveData(0)
+    )
 
-    fun getLatest() = latestItems
+    fun getCards(category: CardCategory) = cardsItems[category]!!
 
-    suspend fun loadNewCards() {
+    suspend fun loadNewCards(category: CardCategory) {
         withContext(Dispatchers.IO) {
             try {
-                cardApi.getLatestCard(page).let {
+                cardApi.getCards(category.path, page[category]!!.value!!).let {
                     if (it.isSuccessful) {
                         val newCards = it.body()?.result
-                        val allCards = latestItems.value?.data.orEmpty().toMutableList()
+                        val allCards = cardsItems[category]?.value?.data.orEmpty().toMutableList()
 
                         if (!newCards.isNullOrEmpty()) {
-                            allCards.addAll(newCards.filter { card -> !cardExists(card.id) })
+                            allCards.addAll(newCards.filter { card ->
+                                !cardExists(category, card.id)
+                            })
                         }
 
-                        latestItems.postValue(Resource.success(allCards))
-                        page++
-                    } else latestItems.postValue(Resource.error())
+                        cardsItems[category]?.postValue(Resource.success(allCards))
+                        page[category]!!.postValue(page[category]!!.value!! + 1)
+                    } else cardsItems[category]?.postValue(Resource.error())
                 }
             } catch (e: Exception) {
-                latestItems.postValue(Resource.error())
+                cardsItems[category]?.postValue(Resource.error())
             }
         }
     }
 
-    private fun cardExists(cardId: Int) = latestItems.value!!.data?.find { it.id == cardId } != null
+    private fun cardExists(category: CardCategory, cardId: Int) =
+        cardsItems[category]?.value!!.data?.find { it.id == cardId } != null
 
+}
+
+enum class CardCategory(val path: String) {
+    LATEST("latest"),
+    HOT("hot"),
+    TOP("top")
 }
